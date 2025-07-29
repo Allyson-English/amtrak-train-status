@@ -78,7 +78,7 @@ function buildFullScheduleTable(stations, trainNumber) {
             const delayMin = Math.abs((new Date(station.schArr) - new Date(station.arr)) / (1000*60));
             const delayed = delayMin > 5;
 
-            let delayMessage = ""
+            let delayMsgPrts = []
             if (delayed) {
                 console.log(delayMin)
                 const totalMinutes = Math.floor(delayMin / (1000 * 60));
@@ -86,7 +86,14 @@ function buildFullScheduleTable(stations, trainNumber) {
                 const hours = Math.floor(delayMin / 60);
                 const minutes = delayMin % 60;
 
-                delayMessage = hours > 0 ? `‼️ ${hours} Hours ${minutes} Minutes Delayed` : `‼️ ${minutes} Minutes Delayed`
+                if (hours > 0) {
+                  delayMsgPrts.push(`${hours} Hour${hours !== 1 ? 's' : ''}`);
+                }
+
+                if (minutes > 0) {
+                  delayMsgPrts.push(`${minutes} Minute${minutes !== 1 ? 's' : ''}`);
+                }
+
             }
 
             const statusLink = `<a href="station.html?train=${encodeURIComponent(trainNumber)}&station=${encodeURIComponent(station.code)}">🔗</a>`;
@@ -96,7 +103,7 @@ function buildFullScheduleTable(stations, trainNumber) {
             <td>${station.name}</td>
             <td><div class="tooltip">${new Date(station.arr).toLocaleString()}<span class="tooltiptext">Scheduled: ${new Date(station.schArr).toLocaleString()}</span></div></td>
             <td><div class="tooltip">${new Date(station.dep).toLocaleString()}<span class="tooltiptext">Scheduled: ${new Date(station.schDep).toLocaleString()}</span></div></td>
-            <td>${delayed ? delayMessage : "🟢 On Time"}</td>
+            <td>${delayMsgPrts.length > 0 ? `‼️ ${delayMsgPrts.join(' ')} Delayed` : "🟢 On Time"}</td>
             `;
             table.appendChild(tr);
         }
