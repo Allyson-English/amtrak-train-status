@@ -96,7 +96,7 @@ function buildFullScheduleTable(stations, trainNumber) {
             <td>${station.name}</td>
             <td><div class="tooltip">${new Date(station.arr).toLocaleString()}<span class="tooltiptext">Scheduled: ${new Date(station.schArr).toLocaleString()}</span></div></td>
             <td><div class="tooltip">${new Date(station.dep).toLocaleString()}<span class="tooltiptext">Scheduled: ${new Date(station.schDep).toLocaleString()}</span></div></td>
-            <td>${delayed ? delayMessage : station.status}</td>
+            <td>${delayed ? delayMessage : "🟢 On Time"}</td>
             `;
             table.appendChild(tr);
         }
