@@ -59,7 +59,7 @@ async function getTrainStatus(trainNumber) {
 function buildFullScheduleTable(stations, trainNumber) {
     const table = document.createElement("table");
     const header = document.createElement("tr");
-    ["Share Status", "Station", "Code", "Scheduled Arrival", "Scheduled Departure", "Arrival", "Departure", "Status"].forEach(text => {
+    ["Share", "Station", "Expected Arrival", "Expected Departure", "Status"].forEach(text => {
         const th = document.createElement("th");
         th.textContent = text;
         header.appendChild(th);
@@ -67,22 +67,39 @@ function buildFullScheduleTable(stations, trainNumber) {
     table.appendChild(header);
 
     stations.forEach(station => {
-        const tr = document.createElement("tr");
-        const delayMin = Math.abs((new Date(station.schArr) - new Date(station.arr)) / (1000*60));
-        const delayed = delayMin > 5;
-        const statusLink = `<a href="station.html?train=${encodeURIComponent(trainNumber)}&station=${encodeURIComponent(station.code)}">🔗 ${station.name}</a>`;
+        console.log(station.status)
+        if (station.status != 'Departed') {
+            let currentTime = (new Date());
+            console.log(new Date(station.dep)- currentTime)
+            const departed = (new Date(station.dep) - currentTime) / (1000*60)
+            console.log("Departed? ", departed)
 
-        tr.innerHTML = `
-        <td>${statusLink}</td>
-        <td>${station.name}</td>
-        <td>${station.code}</td>
-        <td>${station.schArr}</td>
-        <td>${station.schDep}</td>
-        <td>${station.arr}</td>
-        <td>${station.dep}</td>
-        <td>${delayed ? '‼️ Delayed' : station.status}</td>
-        `;
-        table.appendChild(tr);
+            const tr = document.createElement("tr");
+            const delayMin = Math.abs((new Date(station.schArr) - new Date(station.arr)) / (1000*60));
+            const delayed = delayMin > 5;
+
+            let delayMessage = ""
+            if (delayed) {
+                console.log(delayMin)
+                const totalMinutes = Math.floor(delayMin / (1000 * 60));
+                console.log(totalMinutes)
+                const hours = Math.floor(delayMin / 60);
+                const minutes = delayMin % 60;
+
+                delayMessage = hours > 0 ? `‼️ ${hours} Hours ${minutes} Minutes Delayed` : `‼️ ${minutes} Minutes Delayed`
+            }
+
+            const statusLink = `<a href="station.html?train=${encodeURIComponent(trainNumber)}&station=${encodeURIComponent(station.code)}">🔗</a>`;
+
+            tr.innerHTML = `
+            <td>${statusLink}</td>
+            <td>${station.name}</td>
+            <td><div class="tooltip">${new Date(station.arr).toLocaleString()}<span class="tooltiptext">Scheduled: ${new Date(station.schArr).toLocaleString()}</span></div></td>
+            <td><div class="tooltip">${new Date(station.dep).toLocaleString()}<span class="tooltiptext">Scheduled: ${new Date(station.schDep).toLocaleString()}</span></div></td>
+            <td>${delayed ? delayMessage : station.status}</td>
+            `;
+            table.appendChild(tr);
+        }
     });
 
     return table;
