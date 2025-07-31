@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.3989cef7.css",
-    "main.js": "/static/js/main.00703070.js",
-    "static/js/453.fa1ed421.chunk.js": "/static/js/453.fa1ed421.chunk.js",
-    "index.html": "/index.html",
-    "main.3989cef7.css.map": "/static/css/main.3989cef7.css.map",
-    "main.00703070.js.map": "/static/js/main.00703070.js.map",
-    "453.fa1ed421.chunk.js.map": "/static/js/453.fa1ed421.chunk.js.map"
+    "main.css": "/amtrak-train-status/static/css/main.3989cef7.css",
+    "main.js": "/amtrak-train-status/static/js/main.62ce2ec9.js",
+    "static/js/453.fa1ed421.chunk.js": "/amtrak-train-status/static/js/453.fa1ed421.chunk.js",
+    "index.html": "/amtrak-train-status/index.html",
+    "main.3989cef7.css.map": "/amtrak-train-status/static/css/main.3989cef7.css.map",
+    "main.62ce2ec9.js.map": "/amtrak-train-status/static/js/main.62ce2ec9.js.map",
+    "453.fa1ed421.chunk.js.map": "/amtrak-train-status/static/js/453.fa1ed421.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3989cef7.css",
-    "static/js/main.00703070.js"
+    "static/js/main.62ce2ec9.js"
   ]
 }
