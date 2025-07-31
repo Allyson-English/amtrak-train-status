@@ -1,5 +1,7 @@
 export interface TrainDetails {
   trainID: string;
+  statusMsg: string;
+  routeName: string;
   trainNum: string;
   origName: string;
   destName: string;

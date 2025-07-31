@@ -144,7 +144,6 @@ export default function TrainStatusByStationPage() {
       <p className="station-detail">
         <strong>Expected Arrival:</strong> {expectedArrival}
       </p>
-      <TrainStatusTable details={trainDetails} />
     </div>
   );
 

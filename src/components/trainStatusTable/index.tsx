@@ -2,12 +2,11 @@ import { Link } from "react-router-dom";
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 
-export default function TrainStatusTable({ details }: { details: TrainDetails[] }) {
-  console.log(details)
-  if (!details.length || details.length === 0) return null;
+export default function TrainStatusTable({ details }: { details: TrainDetails | undefined }) {
+  if (!details) return (<h3>Search for a train or select from the table below.</h3>);
 
-  const trainNumber = details[0].trainNum;
-  const alert = (details[0].alerts.length && details[0].alerts.length > 0) ? details[0].alerts[0].message : ""
+  const trainNumber = details.trainNum;
+  const alert = (details.alerts.length && details.alerts.length > 0) ? `⚠️ ${details.alerts[0].message}` : ""
 
   return (
     <div className="train-status-container">
@@ -26,7 +25,7 @@ export default function TrainStatusTable({ details }: { details: TrainDetails[] 
           </tr>
         </thead>
         <tbody>
-          {details[0].stations.map((stationInfo, index) => {
+          {details.stations.map((stationInfo, index) => {
             if (new Date(stationInfo.dep) <= new Date()) {
               return
             }

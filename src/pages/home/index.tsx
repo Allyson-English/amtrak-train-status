@@ -1,48 +1,59 @@
 import { useEffect, useState } from "react";
 import TrainStatusTable from "../../components/trainStatusTable";
-import { Station, TrainDetails } from "../../types";
+import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
-import { useParams } from "react-router-dom";
+import AllTrainsToday from "../../components/allTrains";
+
+
+
+
 
 export default function Home() {
-  const {train, station} = useParams();
   const [trainNumber, setTrainNumber] = useState<string>('');
-  const [stationCode, setStationCode] = useState<string>('');
-  const [trainDetails, setTrainDetails] = useState<TrainDetails[]>([])
-  const [allStops, setAllStops] = useState<Station[]>([])
+  const [trainDetails, setTrainDetails] = useState<TrainDetails>()
+  const [allTrains, setAllTrains] = useState<Map<string, TrainDetails>>(new Map<string, TrainDetails>())
   const [alertMsg, setAlertMsg] = useState<string>('')
   const [errExists, setErrExists] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true);
 
+  useEffect(() => {
+    const fetchTrains = async () => {
+      try {
+        const response = await fetch(`https://api-v3.amtraker.com/v3/trains`);
+        const data: Record<string, TrainDetails[]> = await response.json();
+        const filteredMap = new Map<string, TrainDetails>();
 
+        for (const [key, trains] of Object.entries(data)) {
+          if (trains.length > 0) {
+            filteredMap.set(key, trains[0]);
+          }
+        }
+
+        setAllTrains(filteredMap);
+      } catch (error) {
+        setErrExists(true);
+        const msg = `Failed to fetch data for train ${trainNumber}: ${error}`;
+        setAlertMsg(msg);
+        console.error(msg);
+      } finally {
+      setLoading(false); 
+    }
+    };
+
+    fetchTrains();
+  }, []);
 
   const handleSubmitTrainNum = (event: React.FormEvent<HTMLFormElement>) => {
-    setErrExists(false)
     event.preventDefault();
     if (!trainNumber) {
       return
     }
 
-    try {
-      fetch(`https://api-v3.amtraker.com/v3/trains/${trainNumber}-${new Date().getDate()}`)
-        .then((response) => response.json())
-        .then((data: Record<string, TrainDetails[]>) => {
-          if (!data[trainNumber] || !data[trainNumber].length) {
-            setAlertMsg(`No routes for train ${trainNumber} found for ${new Date().toLocaleDateString()}`)
-            console.log(alertMsg);
-            setErrExists(true)
-          }
-          setTrainDetails(data[trainNumber]);
-          console.log(trainDetails)
-        })
-    } catch (error) {
-      setErrExists(true)
-      setAlertMsg(`Failed to fetch data for train ${trainNumber}: ${error}`)
-      console.error(alertMsg)
-    }
+    setTrainDetails(allTrains.get(trainNumber));
   }
 
   return (
-   <div className="App">
+    <div className="App">
       <header className="App-header">
         <div className="center-container">
           <h1 className="flip-title title-row">
@@ -63,8 +74,11 @@ export default function Home() {
         <button type="submit">Search</button>
       </form>
 
-      {errExists? alertMsg : <TrainStatusTable details={trainDetails} />}
+      {errExists ? alertMsg : <TrainStatusTable details={trainDetails} />}
 
+{loading
+  ? <p>Loading all trains...</p>
+  : <AllTrainsToday allTrains={allTrains} setTrainDetails={setTrainDetails} />}
     </div>
   );
 }
