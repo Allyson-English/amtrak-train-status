@@ -26,10 +26,6 @@ export default function TrainStatusTable({ details }: { details: TrainDetails | 
         </thead>
         <tbody>
           {details.stations.map((stationInfo, index) => {
-            if (new Date(stationInfo.dep) <= new Date()) {
-              return
-            }
-
             let delayedMinutes = (new Date(stationInfo.arr).getTime() - new Date(stationInfo.schArr).getTime()) / 60000
             const delayed = delayedMinutes >= 5
 
