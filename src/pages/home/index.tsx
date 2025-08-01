@@ -36,8 +36,8 @@ export default function Home() {
         setAlertMsg(msg);
         console.error(msg);
       } finally {
-      setLoading(false); 
-    }
+        setLoading(false);
+      }
     };
 
     fetchTrains();
@@ -60,25 +60,18 @@ export default function Home() {
             <SplitFlap value={"TRACK YOUR TRAIN"} chars={Presets.ALPHANUM} length={16} />
             <span role="img" aria-label="train">🚂</span>
           </h1>
+          <h1 className="flip-title title-row">
+            <SplitFlap value={new Date().toLocaleDateString()} chars={Presets.NUM} length={new Date().toLocaleDateString().length} />
+          </h1>
         </div>
-        <p>Check the Status of your Amtrak train</p>
+        <p>Search Your Amtrak Train Using the Filters Below</p>
       </header>
-
-      <form onSubmit={handleSubmitTrainNum}>
-        <input
-          type="text"
-          value={trainNumber}
-          onChange={(e) => setTrainNumber(e.target.value)}
-          placeholder={"Train Number"}
-        />
-        <button type="submit">Search</button>
-      </form>
 
       {errExists ? alertMsg : <TrainStatusTable details={trainDetails} />}
 
-{loading
-  ? <p>Loading all trains...</p>
-  : <AllTrainsToday allTrains={allTrains} setTrainDetails={setTrainDetails} />}
+      {loading
+        ? <p>Loading all trains...</p>
+        : <AllTrainsToday allTrains={allTrains} setTrainDetails={setTrainDetails} />}
     </div>
   );
 }

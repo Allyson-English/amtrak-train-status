@@ -3,7 +3,7 @@ import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 
 export default function TrainStatusTable({ details }: { details: TrainDetails | undefined }) {
-  if (!details) return (<h3>Search for a train or select from the table below.</h3>);
+  if (!details) return null;
 
   const trainNumber = details.trainNum;
   const alert = (details.alerts.length && details.alerts.length > 0) ? `⚠️ ${details.alerts[0].message}` : ""
