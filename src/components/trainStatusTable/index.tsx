@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 
-export default function TrainStatusTable({ details }: { details: TrainDetails | undefined }) {
+export default function TrainStatusTable({ details, setShowAllTrains }: { details: TrainDetails | undefined; setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>> }) {
   if (!details) return null;
 
   const trainNumber = details.trainNum;
@@ -10,6 +10,9 @@ export default function TrainStatusTable({ details }: { details: TrainDetails | 
 
   return (
     <div className="train-status-container">
+      <button onClick={(e)=> {
+        setShowAllTrains(true)
+      }} type="submit">Show All Trains</button>
       <h3>Complete Timetable For Train</h3>
       <SplitFlap value={trainNumber} chars={Presets.NUM} length={trainNumber.toString().length} />
       <h2>{alert}</h2>

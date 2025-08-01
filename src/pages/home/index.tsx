@@ -15,6 +15,7 @@ export default function Home() {
   const [alertMsg, setAlertMsg] = useState<string>('')
   const [errExists, setErrExists] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true);
+  const [showAllTrains, setShowAllTrains] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchTrains = async () => {
@@ -67,11 +68,11 @@ export default function Home() {
         <p>Search Your Amtrak Train Using the Filters Below</p>
       </header>
 
-      {errExists ? alertMsg : <TrainStatusTable details={trainDetails} />}
+      {!showAllTrains && trainDetails?  <TrainStatusTable details={trainDetails} setShowAllTrains={setShowAllTrains}/> : ""}
 
-      {loading
+      {showAllTrains ? loading
         ? <p>Loading all trains...</p>
-        : <AllTrainsToday allTrains={allTrains} setTrainDetails={setTrainDetails} />}
+        : <AllTrainsToday allTrains={allTrains} setTrainDetails={setTrainDetails} setShowAllTrains={setShowAllTrains}/> : ""}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { TrainDetails } from "../../types";
 import { Link } from "react-router";
 
-export default function AllTrainsToday({ allTrains, setTrainDetails }: { allTrains: Map<string, TrainDetails>; setTrainDetails: (details: TrainDetails) => void }) {
+export default function AllTrainsToday({ allTrains, setTrainDetails, setShowAllTrains }: { allTrains: Map<string, TrainDetails>; setTrainDetails: (details: TrainDetails) => void; setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [searchRouteName, setSearchRouteName] = useState<string>('')
     const [searchTrainNumber, setSearchTrainNumber] = useState<string>('')
     const [searchOrigin, setSearchOrigin] = useState<string>('')
@@ -48,19 +48,18 @@ export default function AllTrainsToday({ allTrains, setTrainDetails }: { allTrai
                         }
 
                         return (
-                            <tr key={key} onClick={() => setTrainDetails(train)}
+                            <tr key={key} onClick={() => {
+                                setTrainDetails(train)
+                                setShowAllTrains(false)
+                            }
+                            }
                                 style={{ cursor: "pointer" }}>
-                                {/* <td className="share-status-link">
-                                    <Link to={`/train/${train.trainNum}}`}>
-                                        🔗
-                                    </Link>
-                                </td> */}
                                 <td> {existingAlert ? `⚠️ ${train.routeName}` : train.routeName}</td>
                                 <td >{train.trainNum}</td>
                                 <td >{train.origName}</td>
                                 <td >{train.destName}</td>
                             </tr>
-                            
+
                         )
                     })}
                 </tbody>
