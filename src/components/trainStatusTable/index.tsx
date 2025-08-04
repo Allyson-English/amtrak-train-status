@@ -1,21 +1,34 @@
 import { Link } from "react-router-dom";
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
+import { useState } from "react";
 
 export default function TrainStatusTable({ details, setShowAllTrains }: { details: TrainDetails | undefined; setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const [allStops, setAllStops] = useState<boolean>(false);
   if (!details) return null;
 
   const trainNumber = details.trainNum;
+  const routeHeader = details.routeName;
+  const trainNumHeader = `Train ${trainNumber}`
   const alert = (details.alerts.length && details.alerts.length > 0) ? `⚠️ ${details.alerts[0].message}` : ""
 
   return (
     <div className="train-status-container">
-      <button onClick={(e)=> {
+      <button onClick={(e) => {
         setShowAllTrains(true)
       }} type="submit">Show All Trains</button>
-      <h3>Complete Timetable For Train</h3>
-      <SplitFlap value={trainNumber} chars={Presets.NUM} length={trainNumber.toString().length} />
+      <br />
+      <SplitFlap value={routeHeader} chars={Presets.ALPHANUM} length={routeHeader.toString().length} />
+      <br />
+      <SplitFlap value={trainNumHeader} chars={Presets.ALPHANUM} length={trainNumHeader.toString().length} />
       <h2>{alert}</h2>
+      <span className="toggle-labels">
+        Remaining Stops
+        <label className="switch">
+          <input checked={allStops} onChange={() => setAllStops(!allStops)} type="checkbox" />
+          <span className="slider round"></span>
+        </label> All Stops
+      </span>
       <table>
         <thead>
           <tr>
@@ -31,6 +44,10 @@ export default function TrainStatusTable({ details, setShowAllTrains }: { detail
           {details.stations.map((stationInfo, index) => {
             let delayedMinutes = (new Date(stationInfo.arr).getTime() - new Date(stationInfo.schArr).getTime()) / 60000
             const delayed = delayedMinutes >= 5
+
+            if (!allStops && stationInfo.status === 'Departed' ) {
+              return null
+            }
 
             return (
               <tr key={index}>

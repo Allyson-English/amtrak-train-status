@@ -65,7 +65,7 @@ export default function Home() {
             <SplitFlap value={new Date().toLocaleDateString()} chars={Presets.NUM} length={new Date().toLocaleDateString().length} />
           </h1>
         </div>
-        <p>Search Your Amtrak Train Using the Filters Below</p>
+        <p>{showAllTrains ? "Search Your Amtrak Train Using the Filters Below": ""}</p>
       </header>
 
       {!showAllTrains && trainDetails?  <TrainStatusTable details={trainDetails} setShowAllTrains={setShowAllTrains}/> : ""}
