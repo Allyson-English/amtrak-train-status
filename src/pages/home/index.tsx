@@ -1,4 +1,4 @@
-import { useEffect, useState, cache } from "react";
+import { useEffect, useState } from "react";
 import TrainStatusTable from "../../components/trainStatusTable";
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
