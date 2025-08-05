@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Station, TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
-import TrainStatusTable from "../../components/trainStatusTable";
 
 
 
@@ -11,12 +10,10 @@ export default function TrainStatusByStationPage() {
   const [manualTrainNum, setManualTrainNum] = useState<string>('')
   const [stationInfo, setStationInfo] = useState<Station | null>(null);
   const [alertMsg, setAlertMsg] = useState<string>('')
-  const [errExists, setErrExists] = useState<boolean>(false)
   const [trainDetails, setTrainDetails] = useState<TrainDetails[]>([])
 
 
   const handleSubmitTrainNum = (event: React.FormEvent<HTMLFormElement>) => {
-    setErrExists(false)
     event.preventDefault();
     if (!manualTrainNum) {
       return
@@ -29,13 +26,11 @@ export default function TrainStatusByStationPage() {
           if (!data[manualTrainNum] || !data[manualTrainNum].length) {
             setAlertMsg(`No routes for train ${trainNumber} found for ${new Date().toLocaleDateString()}`)
             console.log(alertMsg);
-            setErrExists(true)
           }
           setTrainDetails(data[manualTrainNum]);
           console.log(trainDetails)
         })
     } catch (error) {
-      setErrExists(true)
       setAlertMsg(`Failed to fetch data for train ${trainNumber}: ${error}`)
       console.error(alertMsg)
     }
@@ -50,20 +45,17 @@ export default function TrainStatusByStationPage() {
           if (!data[trainNumber!] || !data[trainNumber!].length) {
             setAlertMsg(`No routes for train ${trainNumber} found for ${new Date().toLocaleDateString()}`)
             console.log(alertMsg);
-            setErrExists(true)
           }
           setTrainDetails(data[trainNumber!]);
           console.log(trainDetails)
           const train = data[trainNumber!]?.[0];
           if (data[trainNumber!].length < 1) {
-            setErrExists(true)
             setAlertMsg(`Failed to fetch data for train ${trainNumber}`)
           }
       const station = train.stations.find((s) => s.code === stationCode);
       setStationInfo(station || null);
     })
 } catch (error) {
-  setErrExists(true)
   setAlertMsg(`Failed to fetch data for train ${trainNumber}: ${error}`)
   console.error(alertMsg)
 }
