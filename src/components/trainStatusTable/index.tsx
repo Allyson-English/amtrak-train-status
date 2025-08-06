@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 import { useState } from "react";
