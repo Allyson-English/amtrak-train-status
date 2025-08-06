@@ -4,10 +4,6 @@ import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 import AllTrainsToday from "../../components/allTrains";
 
-
-
-
-
 export default function Home() {
   const [trainDetails, setTrainDetails] = useState<TrainDetails>()
   const [allTrains, setAllTrains] = useState<Map<string, TrainDetails>>(new Map<string, TrainDetails>())
