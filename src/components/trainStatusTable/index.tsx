@@ -2,15 +2,18 @@ import { Link } from "react-router-dom";
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export default function TrainStatusTable({ details, setShowAllTrains }: { details: TrainDetails | undefined; setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const navigate = useNavigate();
   const [allStops, setAllStops] = useState<boolean>(false);
-  if (!details) return null;
 
+  if (!details) return null;
   const trainNumber = details.trainNum;
   const routeHeader = details.routeName;
   const trainNumHeader = `Train ${trainNumber}`
   const alert = (details.alerts.length && details.alerts.length > 0) ? `⚠️ ${details.alerts[0].message}` : ""
+
 
   return (
     <div className="train-status-container">
@@ -32,7 +35,6 @@ export default function TrainStatusTable({ details, setShowAllTrains }: { detail
       <table>
         <thead>
           <tr>
-            <th>Share</th>
             <th>Station</th>
             <th>Status</th>
             <th>Scheduled Arrival</th>
@@ -45,17 +47,16 @@ export default function TrainStatusTable({ details, setShowAllTrains }: { detail
             let delayedMinutes = (new Date(stationInfo.arr).getTime() - new Date(stationInfo.schArr).getTime()) / 60000
             const delayed = delayedMinutes >= 5
 
-            if (!allStops && stationInfo.status === 'Departed' ) {
+            if (!allStops && stationInfo.status === 'Departed') {
               return null
             }
 
+            const handleRowClick = () => {
+              navigate(`/train/${trainNumber}/station/${stationInfo.code}`);
+            };
+
             return (
-              <tr key={index}>
-                <td className="share-status-link">
-                  <Link to={`/train/${trainNumber}/station/${stationInfo.code}`}>
-                    🔗
-                  </Link>
-                </td>
+              <tr key={index} onClick={handleRowClick} style={{ cursor: 'pointer' }}>
                 <td >{stationInfo.name}</td>
                 <td >{stationInfo.status}</td>
                 <td >{new Date(stationInfo.schArr).toLocaleString()}</td>

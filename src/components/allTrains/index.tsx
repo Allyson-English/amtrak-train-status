@@ -20,7 +20,6 @@ export default function AllTrainsToday({ allTrains, setTrainDetails, setShowAllT
             <table>
                 <thead>
                     <tr>
-                        {/* <th>Schedule</th> */}
                         <th>Route Name</th>
                         <th>Number</th>
                         <th>Origin</th>
