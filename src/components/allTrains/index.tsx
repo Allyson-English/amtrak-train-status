@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { TrainDetails } from "../../types";
-import { Link } from "react-router";
 
 export default function AllTrainsToday({ allTrains, setTrainDetails, setShowAllTrains }: { allTrains: Map<string, TrainDetails>; setTrainDetails: (details: TrainDetails) => void; setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>> }) {
     const [searchRouteName, setSearchRouteName] = useState<string>('')
