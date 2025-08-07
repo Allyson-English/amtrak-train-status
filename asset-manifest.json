@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/amtrak-train-status/static/css/main.cdba33d2.css",
-    "main.js": "/amtrak-train-status/static/js/main.e8fe99d4.js",
+    "main.js": "/amtrak-train-status/static/js/main.b7622850.js",
     "static/js/453.e6f976c1.chunk.js": "/amtrak-train-status/static/js/453.e6f976c1.chunk.js",
     "index.html": "/amtrak-train-status/index.html",
     "main.cdba33d2.css.map": "/amtrak-train-status/static/css/main.cdba33d2.css.map",
-    "main.e8fe99d4.js.map": "/amtrak-train-status/static/js/main.e8fe99d4.js.map",
+    "main.b7622850.js.map": "/amtrak-train-status/static/js/main.b7622850.js.map",
     "453.e6f976c1.chunk.js.map": "/amtrak-train-status/static/js/453.e6f976c1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cdba33d2.css",
-    "static/js/main.e8fe99d4.js"
+    "static/js/main.b7622850.js"
   ]
 }
