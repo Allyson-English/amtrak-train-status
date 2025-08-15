@@ -14,7 +14,7 @@ function App() {
     <Router basename="/amtrak-train-status">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/train/:trainNumber/station/:stationCode" element={<TrainStatusByStationPage />} />
+        {/* <Route path="/train/:trainNumber/station/:stationCode" element={<TrainStatusByStationPage />} /> */}
       </Routes>
     </Router>
   );
