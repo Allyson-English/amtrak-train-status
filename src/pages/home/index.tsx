@@ -4,12 +4,18 @@ import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 import AllTrainsToday from "../../components/allTrains";
 
-export default function Home() {
+interface HomeProps {
+  initialTrainNumber?: string;
+  initialStationCode?: string;
+}
+
+export default function Home({ initialTrainNumber, initialStationCode }: HomeProps) {
   const [trainDetails, setTrainDetails] = useState<TrainDetails>()
   const [allTrains, setAllTrains] = useState<Map<string, TrainDetails>>(new Map<string, TrainDetails>())
   const [loading, setLoading] = useState<boolean>(true);
   const [showAllTrains, setShowAllTrains] = useState<boolean>(true)
   const [refresh, setRefresh] = useState<number>(0)
+  const [prefillAttempted, setPrefillAttempted] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTrains = async () => {      
@@ -36,6 +42,26 @@ export default function Home() {
     fetchTrains();
   }, [refresh]);
 
+  useEffect(() => {
+    if (loading || prefillAttempted) {
+      return;
+    }
+
+    if (!initialTrainNumber) {
+      setPrefillAttempted(true);
+      return;
+    }
+
+    const matchedTrain = Array.from(allTrains.values()).find((train) => train.trainNum === initialTrainNumber);
+
+    if (matchedTrain) {
+      setTrainDetails(matchedTrain);
+      setShowAllTrains(false);
+    }
+
+    setPrefillAttempted(true);
+  }, [allTrains, initialTrainNumber, loading, prefillAttempted]);
+
 
   return (
     <div className="App">
@@ -55,7 +81,13 @@ export default function Home() {
       }} type="submit">Refresh</button>
       </header>
 
-      {!showAllTrains && trainDetails ? <TrainStatusTable details={trainDetails} setShowAllTrains={setShowAllTrains} /> : ""}
+      {!showAllTrains && trainDetails ? (
+        <TrainStatusTable
+          details={trainDetails}
+          setShowAllTrains={setShowAllTrains}
+          initialStationCode={initialStationCode}
+        />
+      ) : ""}
 
       {showAllTrains ? loading
         ? <p>Loading all trains...</p>

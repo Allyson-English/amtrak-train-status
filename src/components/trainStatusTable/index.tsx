@@ -1,12 +1,39 @@
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
-import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from "react";
 
-export default function TrainStatusTable({ details, setShowAllTrains }: { details: TrainDetails | undefined; setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>> }) {
+export default function TrainStatusTable({
+  details,
+  setShowAllTrains,
+  initialStationCode,
+}: {
+  details: TrainDetails | undefined;
+  setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>>;
+  initialStationCode?: string;
+}) {
   const [allStops, setAllStops] = useState<boolean>(false);
   const [showAllStations, setShowAllStations] = useState<boolean>(true);
   const [station, setStation] = useState<string>("")
+  const prefilledStationApplied = useRef<boolean>(false);
+
+  useEffect(() => {
+    if (prefilledStationApplied.current || !initialStationCode || !details) {
+      return;
+    }
+
+    const matchedStation = details.stations.find(
+      (stationInfo) => stationInfo.code.toUpperCase() === initialStationCode.toUpperCase(),
+    );
+
+    prefilledStationApplied.current = true;
+
+    if (!matchedStation) {
+      return;
+    }
+
+    setStation(matchedStation.code);
+    setShowAllStations(false);
+  }, [details, initialStationCode]);
 
   if (!details) return null;
   const trainNumber = details.trainNum;
@@ -80,7 +107,7 @@ export default function TrainStatusTable({ details, setShowAllTrains }: { detail
               }
 
               const handleRowClick = () => {
-                if (station == "") {
+                if (station === "") {
                   setStation(stationInfo.code)
                   setShowAllStations(false)
                   return

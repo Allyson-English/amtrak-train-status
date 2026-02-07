@@ -1,4 +1,24 @@
-# Getting Started with Create React App
+# Amtrak Train Status
+
+## Shareable URL Query Parameter Contract
+
+Use query parameters on the home route to pre-select a train and station:
+
+- Canonical params: `train`, `station`
+- Example: `/amtrak-train-status/?train=123&station=NYP`
+
+Accepted formats:
+
+- `train`: digits only (`0-9`), at least 1 character.
+- `station`: exactly 3 letters, case-insensitive input but normalized to uppercase (for example, `nyp` -> `NYP`).
+
+Fallback behavior:
+
+- Missing params are ignored.
+- Invalid params are ignored (no crash, no forced prefill from invalid values).
+- If one param is valid and the other is missing/invalid, keep only the valid value for future prefill logic.
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
