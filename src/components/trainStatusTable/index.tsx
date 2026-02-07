@@ -16,6 +16,7 @@ export default function TrainStatusTable({
   const [allStops, setAllStops] = useState<boolean>(false);
   const [showAllStations, setShowAllStations] = useState<boolean>(true);
   const [station, setStation] = useState<string>("")
+  const [copyFeedback, setCopyFeedback] = useState<string>("");
   const prefilledStationApplied = useRef<boolean>(false);
 
   useEffect(() => {
@@ -45,6 +46,20 @@ export default function TrainStatusTable({
   const trainNumHeader = `Train ${trainNumber}`
   const alert = (details.alerts.length && details.alerts.length > 0) ? `⚠️ ${details.alerts[0].message}` : ""
 
+  const handleCopyShareLink = async () => {
+    if (!navigator.clipboard || !window.isSecureContext) {
+      setCopyFeedback("Unable to copy link in this browser context.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopyFeedback("Share link copied.");
+    } catch {
+      setCopyFeedback("Failed to copy share link.");
+    }
+  };
+
 
   return (
     <div className="train-status-container">
@@ -52,6 +67,8 @@ export default function TrainStatusTable({
         setShowAllTrains(true)
         onStationChange?.(undefined);
       }} type="submit">Show All Trains</button>
+      <button onClick={handleCopyShareLink} type="button">Copy share link</button>
+      {copyFeedback ? <p>{copyFeedback}</p> : null}
       <br />
       <SplitFlap value={routeHeader} chars={Presets.ALPHANUM} length={routeHeader.toString().length} />
       <br />
