@@ -6,10 +6,12 @@ export default function TrainStatusTable({
   details,
   setShowAllTrains,
   initialStationCode,
+  onStationChange,
 }: {
   details: TrainDetails | undefined;
   setShowAllTrains: React.Dispatch<React.SetStateAction<boolean>>;
   initialStationCode?: string;
+  onStationChange?: (stationCode: string | undefined) => void;
 }) {
   const [allStops, setAllStops] = useState<boolean>(false);
   const [showAllStations, setShowAllStations] = useState<boolean>(true);
@@ -28,12 +30,14 @@ export default function TrainStatusTable({
     prefilledStationApplied.current = true;
 
     if (!matchedStation) {
+      onStationChange?.(undefined);
       return;
     }
 
     setStation(matchedStation.code);
     setShowAllStations(false);
-  }, [details, initialStationCode]);
+    onStationChange?.(matchedStation.code);
+  }, [details, initialStationCode, onStationChange]);
 
   if (!details) return null;
   const trainNumber = details.trainNum;
@@ -46,6 +50,7 @@ export default function TrainStatusTable({
     <div className="train-status-container">
       <button onClick={(e) => {
         setShowAllTrains(true)
+        onStationChange?.(undefined);
       }} type="submit">Show All Trains</button>
       <br />
       <SplitFlap value={routeHeader} chars={Presets.ALPHANUM} length={routeHeader.toString().length} />
@@ -82,6 +87,7 @@ export default function TrainStatusTable({
               const handleRowClick = () => {
                 setShowAllStations(false)
                 setStation(stationInfo.code)
+                onStationChange?.(stationInfo.code);
               };
 
               return (
@@ -114,6 +120,7 @@ export default function TrainStatusTable({
                 }
                 setShowAllStations(true)
                 setStation("")
+                onStationChange?.(undefined);
               };
 
               return (

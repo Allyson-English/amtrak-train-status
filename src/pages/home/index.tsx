@@ -3,6 +3,7 @@ import TrainStatusTable from "../../components/trainStatusTable";
 import { TrainDetails } from "../../types";
 import SplitFlap, { Presets } from "react-split-flap";
 import AllTrainsToday from "../../components/allTrains";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface HomeProps {
   initialTrainNumber?: string;
@@ -15,7 +16,10 @@ export default function Home({ initialTrainNumber, initialStationCode }: HomePro
   const [loading, setLoading] = useState<boolean>(true);
   const [showAllTrains, setShowAllTrains] = useState<boolean>(true)
   const [refresh, setRefresh] = useState<number>(0)
-  const [prefillAttempted, setPrefillAttempted] = useState<boolean>(false);
+  const [isHydrated, setIsHydrated] = useState<boolean>(false);
+  const [selectedStationCode, setSelectedStationCode] = useState<string | undefined>(initialStationCode);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrains = async () => {      
@@ -43,12 +47,12 @@ export default function Home({ initialTrainNumber, initialStationCode }: HomePro
   }, [refresh]);
 
   useEffect(() => {
-    if (loading || prefillAttempted) {
+    if (loading || isHydrated) {
       return;
     }
 
     if (!initialTrainNumber) {
-      setPrefillAttempted(true);
+      setIsHydrated(true);
       return;
     }
 
@@ -59,8 +63,42 @@ export default function Home({ initialTrainNumber, initialStationCode }: HomePro
       setShowAllTrains(false);
     }
 
-    setPrefillAttempted(true);
-  }, [allTrains, initialTrainNumber, loading, prefillAttempted]);
+    setIsHydrated(true);
+  }, [allTrains, initialTrainNumber, isHydrated, loading]);
+
+  useEffect(() => {
+    if (!isHydrated) {
+      return;
+    }
+
+    const nextQuery = new URLSearchParams();
+
+    if (!showAllTrains && trainDetails?.trainNum) {
+      nextQuery.set("train", trainDetails.trainNum);
+      const hasSelectedStation = selectedStationCode && trainDetails.stations.some(
+        (stationInfo) => stationInfo.code.toUpperCase() === selectedStationCode.toUpperCase(),
+      );
+
+      if (hasSelectedStation) {
+        nextQuery.set("station", selectedStationCode!.toUpperCase());
+      }
+    }
+
+    const nextSearch = nextQuery.toString();
+    const currentSearch = location.search.replace(/^\?/, "");
+
+    if (nextSearch === currentSearch) {
+      return;
+    }
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: nextSearch ? `?${nextSearch}` : "",
+      },
+      { replace: true },
+    );
+  }, [isHydrated, location.pathname, location.search, navigate, selectedStationCode, showAllTrains, trainDetails]);
 
 
   return (
@@ -86,6 +124,7 @@ export default function Home({ initialTrainNumber, initialStationCode }: HomePro
           details={trainDetails}
           setShowAllTrains={setShowAllTrains}
           initialStationCode={initialStationCode}
+          onStationChange={setSelectedStationCode}
         />
       ) : ""}
 
